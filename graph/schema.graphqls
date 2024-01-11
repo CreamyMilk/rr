@@ -1,0 +1,558 @@
+directive @goField(
+  forceResolver: Boolean
+  name: String
+) on INPUT_FIELD_DEFINITION | FIELD_DEFINITION
+
+scalar Time
+enum EmailType {
+  INBOX
+  OUTBOX
+}
+enum PersonalMeetingStatus {
+  REJECTED
+  ACCPETED
+  REQUESTED
+}
+
+type Mutation {
+  RegisterStudent(input: RegisterStudentInput!): AuthPayload!
+  Login(input: LoginInput!): AuthPayload!
+  CreateCourse(input: NewCourse!): Boolean!
+  AddTutor(input: NewTutor!): Boolean!
+  AssignTutor(input: AssignCourseToTutorInput!): Boolean!
+  CreateChapter(input: NewChapter!): Boolean!
+  CreateSection(input: NewSection!): Boolean!
+  CreateEmail(input: EmailSendingInput!): Boolean!
+  CreateRepoForCourse(input: RepoCreateionForCourseInput!): Boolean!
+  CreateQuiz(input: CreateQuizInput!): Boolean!
+  SubmitQuiz(input: SubmitQuizInput!): Boolean!
+  EnrollCourse(token: String!, courseId: String!): Boolean!
+  ChangePassword(input: ChangePasswordInput!): Boolean!
+  ScheduleMeeting(input: ScheduleMeetingInput!): Boolean!
+  AddFilesToCourse(input: CourseFilesInput!): Boolean!
+  DeleteCourse(token: String!, courseID: String!): Boolean!
+  DeleteFileUpload(token: String!, fileurl: String!): Boolean!
+  CreateAssignment(input: CreateAssignmentInput!): Boolean!
+  SubmitAssignment(input: SubmitAssignmentInput!): Boolean!
+  MarkAssignent(input: MarkAssignentInput!): Boolean!
+  ChangeLogo(token: String!, url: String!): Boolean!
+  AddSchool(input: NewSchoolAdmin!): Boolean!
+  DeleteMeeting(token: String!, id: String!): Boolean!
+  DeleteEvent(token: String!, id: String!): Boolean!
+  AddSchoolAdmin(input: NewSchoolAdmin!): Boolean!
+  ResetPassword(input: ResetPasswordInput!): Boolean!
+  AddEvents(input: AddEventsInput!): Boolean!
+  EditEvent(input: EditEventsInput!): Boolean!
+  EditHero(input: EditHeroInput!): Boolean!
+  RedeemBadge(token: String!, badgeID: String!): Boolean!
+  IssueCertificate(input: IssueCertificateInput!): Certificate!
+  AddHero(input: AddHeroInput!): Boolean!
+  addPmeeting(input:PersonalMeetingInput!):Boolean!
+  changePMeeting(input:ChangeMeetingStatus!):Boolean!
+}
+
+type Query {
+  FetchCourses(token: String!, schoolref: String!): [Course!]!
+  FetchCourseById(token: String!, id: String!): Course!
+  FetchChaptersByCourseId(token: String!, id: String!): [Chapter!]!
+  FetchStudentById(id: String!): Student!
+  FetchStudentByCourseId(courseId: String!): [Student!]!
+  FetchCourseNameByCourseId(courseId: String!): Course!
+  FetchStudents(token: String!, page: Int!): [Student!]!
+  FetchSectionsByChapterId(token: String!, id: String!): [Section!]!
+  FetchQuiz(token: String!, courseId: String!): [Quiz!]!
+  FetchQuizResults(token: String!, courseId: String!): [QuizResult!]!
+  FetchStudentQuizResults(
+    token: String!
+    courseId: String!
+  ): [StudentQuizResult!]!
+  FetchQuizById(token: String!, quizId: String!): Quiz!
+  FetchQuizResultById(token: String!, quizId: String!): QuizResult!
+  FetchStudentCourses(token: String!): [Course!]!
+  FetchProfile(token: String!): User!
+  FetchAllEmails(token: String!, emailType: EmailType!): [Email!]!
+  FetchEmail(token: String!, emailId: String!): Email!
+  FetchTutorCourses(token: String!): [Course!]!
+  FetchMeetings(token: String!, courseId: String): [Meeting!]!
+  FetchParticipantsInMeeeting(
+    token: String!
+    vidSDKRoomID: String!
+  ): [Participant!]!
+  FetchLayoutDetails(token: String!): LayoutDetails!
+  FetchCourseFiles(token: String!, courseId: String!): [File!]!
+  FetchAssignments(token: String!, courseId: String!): [Assignment!]!
+  FetchAssignment(token: String!, assignmentId: String!): Assignment!
+  FetchSubmissions(token: String!, assignmentId: String!): [Submission!]!
+  FetchSubmission(token: String!, submissionId: String!): Submission!
+  FetchLogo(href: String!): String!
+  FetchSchools: [School!]!
+  FetchAllQuizResult(quizID: String!, courseID: String!): [Result!]!
+  FetchPointsByStudentId(token: String!): Int!
+  FetchBadges(token: String!): [Badge!]!
+  FetchPublicCourses(schoolref: String!): [Course!]!
+  FetchSchoolStudentsNumber(schoolref: String!): Int!
+  FetchEvents(ref: String!): [Event!]!
+  FetchEventById(id: String!): Event!
+  FetchHero(ref: String!): Hero!
+  FetchHeroById(id: String!): Hero! 
+  fetchPMeetings(token:String!):[PersonalMeeting!]!
+  fetchPMeetingSlots(token:String!,courseId:String!):[Int!]!
+}
+
+input PersonalMeetingInput {
+  courseId: String!
+  token: String!
+  start: Time!
+}
+
+
+input ChangeMeetingStatus{
+  token:String!
+  id:String!
+  newStatus:PersonalMeetingStatus!
+}
+
+type Certificate {
+  id: String!
+  student: Student!
+  course: Course!
+  completionDate: Time!
+  url: String!
+  title: String!
+  description: String!
+  issuer: String!
+  expiryDate: Time
+  status: CertificateStatus!
+  templateId: String
+  verificationUrl: String
+  revocationDate: Time
+  revocationReason: String
+  issuerSignatureUrl: String
+  sealImageUrl: String
+}
+
+type PersonalMeeting{
+  id: String!
+  status: PersonalMeetingStatus!
+  tutorname: String!
+  link:String!
+  tutorid: String!
+  userName: String!
+  userId: String!
+  createdAt: Time!
+  startHour:Int!
+  endHour:Int!
+}
+
+input IssueCertificateInput {
+  studentId: String!
+  courseId: String!
+  completionDate: Time!
+  title: String!
+  description: String!
+  issuer: String!
+  expiryDate: Time
+  verificationUrl: String
+  issuerSignatureUrl: String
+  sealImageUrl: String
+}
+
+enum CertificateStatus {
+  VALID
+  REVOKED
+  EXPIRED
+}
+
+type Event {
+  id: String!
+  title: String!
+  description: String!
+  start_time: Time!
+  end_time: Time!
+  location: String!
+  imageURL: String!
+  link: String!
+  date: Time!
+}
+type Hero {
+  id: String!
+  title: String!
+  subtitle: String!
+  banner1: String!
+  banner2: String!
+  ref: String!
+}
+
+type Badge {
+  id: String!
+  photoUrl: String!
+  redeemed: Boolean!
+  pointsIndex: Int!
+}
+
+type Participant {
+  name: String!
+}
+
+type Result {
+  studentName: String!
+  studentId: String!
+  marks: Int!
+  total: Int!
+  quizId: String!
+  done: StudentQuizStatus!
+}
+enum StudentQuizStatus {
+  DONE
+  UNDONE
+}
+
+type School {
+  id: String!
+  name: String!
+}
+input NewSchoolAdmin {
+  email: String!
+  devToken: String!
+  ref: String!
+  password: String!
+  adminName: String!
+  schoolName: String!
+}
+
+input RepoCreateionForCourseInput {
+  token: String!
+  courseId: String!
+  repoName: String!
+  repoDescription: String!
+}
+
+input SubmitAssignmentInput {
+  token: String!
+  assignmentId: String!
+  note: String
+  files: [FileInput!]
+}
+
+input MarkAssignentInput {
+  token: String!
+  submissionId: String!
+  marks: Int!
+  remark: String
+}
+
+input CreateAssignmentInput {
+  token: String!
+  courseId: String!
+  title: String!
+  description: String!
+  dueDate: Time!
+  files: [FileInput!]
+}
+
+type Submission {
+  id: String!
+  courseId: String!
+  assignment: Assignment!
+  files: [File!]
+  note: String
+  marks: Int
+  remark: String
+  submissionDate: Time!
+  studentId: String!
+  studentName: String!
+}
+
+type Assignment {
+  id: String!
+  courseId: String!
+  title: String!
+  description: String!
+  files: [File!]
+  dueDate: Time!
+  marks: Int
+  remark: String
+}
+
+input CourseFilesInput {
+  token: String!
+  files: [FileInput!]!
+  courseId: String!
+}
+
+type File {
+  name: String!
+  url: String!
+}
+
+input FileInput {
+  name: String!
+  url: String!
+}
+
+type LayoutDetails {
+  points: Int!
+  emails: Int!
+  courses: Int!
+  meetings: Int!
+}
+
+type StudentQuizResult {
+  quiz: Quiz!
+  attempts: Int!
+  totalEnrolled: Int!
+  averageMark: Int!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+  role: Role!
+}
+
+type User {
+  profilePhoto: String!
+  id: String!
+  name: String!
+  joinedAt: Time!
+  email: String!
+}
+
+input ScheduleMeetingInput {
+  token: String!
+  title: String!
+  description: String!
+  courseId: String!
+  time: Time!
+}
+
+type Meeting {
+  id: String!
+  title: String!
+  description: String!
+  link: String!
+  recording: String!
+  time: Time!
+  courseId: String!
+  vidSDKMeetingID: String!
+  courseName: String!
+}
+
+type QuizResult {
+  quiz: Quiz
+  marks: Int
+  total: Int
+  realAnswers: [String!]
+  answers: [String!]
+}
+
+type Email {
+  id: String!
+  from: String!
+  to: String!
+  subject: String!
+  body: String!
+}
+
+type AuthPayload {
+  token: String!
+  name: String!
+  logo: String!
+}
+
+input CreateQuizInput {
+  token: String!
+  title: String!
+  courseId: String!
+  questionsInput: [QuestionInput]!
+}
+
+input SubmitQuizInput {
+  token: String!
+  quizId: String!
+  answers: [String!]!
+}
+
+type Quiz {
+  id: String!
+  title: String!
+  courseId: String!
+  questions: [Question!]!
+}
+
+type Question {
+  text: String!
+  choices: [String!]!
+}
+
+input QuestionInput {
+  text: String!
+  choices: [String!]!
+  answer: [String!]!
+}
+
+input EmailSendingInput {
+  token: String!
+  to: String!
+  subject: String!
+  body: String!
+}
+
+input NewCourse {
+  name: String!
+  icon: String!
+  cost: Int!
+  description: String!
+  duration: String!
+  schoolref: String!
+  token: String!
+  courselevel: CourseLevel!
+  coursetype: CourseType!
+}
+
+input NewTutor {
+  email: String!
+  name: String!
+  token: String!
+}
+
+input AssignCourseToTutorInput {
+  tutorEmail: String!
+  courseId: String!
+  token: String!
+}
+
+input NewChapter {
+  courseId: String!
+  title: String!
+  description: String!
+  token: String!
+}
+
+input NewSection {
+  chapterId: String!
+  heading: String!
+  content: String!
+  token: String!
+}
+
+type Course {
+  id: String!
+  name: String!
+  icon: String!
+  description: String!
+  enrolled: Int!
+  tutor: String!
+  quizes: Int!
+  cost: Int!
+  duration: String!
+  level: CourseLevel!
+  lessons: Int!
+  type: CourseType!
+}
+
+enum CourseType {
+  PUBLIC
+  PRIVATE
+}
+
+enum CourseLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+type Chapter {
+  id: String!
+  title: String!
+  description: String!
+}
+
+type Section {
+  heading: String!
+  content: String!
+}
+
+type Student {
+  id: String!
+  name: String!
+  joinedAt: Time!
+  points: Int!
+  schoolName: String!
+  email: String!
+  status: StudentStatus!
+  enrolls: Int!
+}
+
+input ChangePasswordInput {
+  token: String!
+  oldPassword: String!
+  newPassword: String!
+  confirmNewPassword: String!
+}
+
+input ResetPasswordInput {
+  token: String!
+  studentsEmail: String!
+  newPassword: String!
+  confirmNewPassword: String!
+}
+input AddEventsInput {
+  token: String!
+  title: String!
+  description: String!
+  start_time: Time!
+  end_time: Time!
+  location: String!
+  imageURL: String!
+  link: String!
+  date: Time!
+}
+input AddHeroInput {
+  token: String!
+  title: String!
+  subtitle: String!
+  banner1: String!
+  banner2: String!
+}
+
+input EditEventsInput {
+  eventId: String!
+  token: String!
+  title: String!
+  description: String!
+  start_time: Time!
+  end_time: Time!
+  location: String!
+  imageURL: String!
+  link: String!
+  date: Time!
+}
+
+input EditHeroInput {
+  heroId: String!
+  token: String!
+  title: String!
+  subtitle: String!
+  banner1: String!
+  banner2: String!
+}
+
+input RegisterStudentInput {
+  name: String!
+  email: String!
+  password: String!
+  confirmPassword: String!
+  school: String!
+}
+
+enum Role {
+  ADMIN
+  PATNER
+  STUDENT
+  TUTOR
+}
+enum StudentStatus {
+  ACTIVE
+  INACTIVE
+}

@@ -1,0 +1,70 @@
+go get github.com/99designs/gqlgen/graphql/handler/transport@v0.17.20 && go get github.com/99designs/gqlgen/graphql/handler/lru@v0.17.20 && go get github.com/99designs/gqlgen/graphql/handler/lru@v0.17.20 && go get github.com/99designs/gqlgen/graphql/handler/extension@v0.17.20
+
+go get github.com/99designs/gqlgen/internal/imports@v0.17.20 &&  go get github.com/99designs/gqlgen/codegen/config@v0.17.20 && go get github.com/99designs/gqlgen@v0.17.20
+
+
+
+# postgress start
+sudo systemctl restart postgresql.service
+# You can also check the current status of the service:
+sudo systemctl status postgresql.service
+# And start it if it is down:
+sudo systemctl start postgresql.service.3 start
+
+This command will start postgresql in ubuntu
+sudo -i -u postgres psql
+sudo -u postgres psql
+
+
+\list or \l: Lists all databases available in the server.
+
+\connect or \c: Connects to a specific database.
+
+\dt: Lists all tables in the current database.
+
+\du: Lists all users and their roles.
+
+\password: Changes the password for the current user.
+
+\quit or \q: Exits the PostgreSQL client.
+
+CREATE DATABASE: Creates a new database.
+
+DROP DATABASE: Drops an existing database.
+
+CREATE TABLE: Creates a new table.
+
+ALTER TABLE: Modifies an existing table.
+
+DROP TABLE: Drops an existing table.
+
+INSERT INTO: Inserts data into a table.
+
+UPDATE: Modifies data in a table.
+
+DELETE FROM: Deletes data from a table.
+
+SELECT: Queries data from one or more tables.
+
+CREATE USER: Creates a new user.
+
+ALTER USER: Modifies an existing user.
+
+DROP USER: Drops an existing user.
+
+GRANT: Grants a user or role access to a database or table.
+
+REVOKE: Revokes access from a user or role.
+
+CREATE INDEX: Creates an index on a table.
+
+DROP INDEX: Drops an index from a table.
+
+Once you have identified the tables you want to drop, 
+you can drop them one by one using the command DROP TABLE <table name> CASCADE;. 
+Replace <table name> with the name of the table you want to drop.
+
+
+go get github.com/99designs/gqlgen@v0.17.20 && go get github.com/99designs/gqlgen/internal/imports@v0.17.20 && go get github.com/99designs/gqlgen/codegen/config@v0.17.20 && go run github.com/99designs/gqlgen generate
+
+go get github.com/99designs/gqlgen@v0.17.22 && go get github.com/99designs/gqlgen/codegen@v0.17.22 && go get github.com/99designs/gqlgen/codegen@v0.17.22 && go get github.com/99designs/gqlgen/internal/imports@v0.17.22 && go get github.com/99designs/gqlgen/codegen/config@v0.17.22 && go get github.com/99designs/gqlgen/internal/imports@v0.17.22
